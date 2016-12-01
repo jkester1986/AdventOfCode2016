@@ -28,10 +28,13 @@ public class Day1P1 {
     int west = 0;
     
     String dir = "north";
+    ArrayList<int[]> locations = new ArrayList<int[]>();
     
     public void readString(Scanner input){
         
-        ArrayList<int[]> locations = new ArrayList<int[]>();
+        int[] startCoord = {0,0};
+        locations.add(startCoord);
+        
         
         breakLoop:
         while(input.hasNext()){
@@ -54,7 +57,7 @@ public class Day1P1 {
                 System.out.println("Horiz: " + horiz);
                 */
                 
-                
+                /*
                 int[] coordinate = {horiz, vert};
                 System.out.println("coordinates to add: " + Arrays.toString(coordinate));
                 
@@ -73,7 +76,7 @@ public class Day1P1 {
                     System.out.println("The new coordinates are: " + Arrays.toString(coordinate));
                 }
                 */
-                locations.add(coordinate);
+                //locations.add(coordinate);
 
                 System.out.println("Easter Bunny HQ is " + (Math.abs(vert) + Math.abs(horiz)) + " blocks away");
             }
@@ -93,6 +96,7 @@ public class Day1P1 {
         System.out.println("Current Direction: " + currentDir);
         System.out.println("Turning: " + turn);
         
+        
         switch(currentDir){
             case "north":
                 if(turn.charAt(0) == 'L'){
@@ -101,7 +105,11 @@ public class Day1P1 {
                     String[] splitDirs = turn.split("[LR]");
                     //System.out.println("splitDirs = " + splitDirs[1]);
                     int moved = Integer.parseInt(splitDirs[1]);
-                    west += moved;
+                    while (moved > 0){
+                        west++;
+                        getCoords();
+                        moved --;
+                    }
                     System.out.println("West is :" + west);
                 }
                 else {
@@ -110,7 +118,11 @@ public class Day1P1 {
                      String[] splitDirs = turn.split("[LR]");
                     //System.out.println("splitDirs = " + splitDirs[1]);
                     int moved = Integer.parseInt(splitDirs[1]);
-                    east += moved;
+                    while (moved > 0){
+                        east++;
+                        getCoords();
+                        moved --;
+                    }
                      System.out.println("East is :" + east);
                 }
                 
@@ -122,7 +134,11 @@ public class Day1P1 {
                     String[] splitDirs = turn.split("[LR]");
                     //System.out.println("splitDirs = " + splitDirs[1]);
                     int moved = Integer.parseInt(splitDirs[1]);
-                    east += moved;
+                    while (moved > 0){
+                        east++;
+                        getCoords();
+                        moved --;
+                    }
                     System.out.println("East is :" + east);
                 }
                 else {
@@ -131,7 +147,11 @@ public class Day1P1 {
                     String[] splitDirs = turn.split("[LR]");
                     //System.out.println("splitDirs = " + splitDirs[1]);
                     int moved = Integer.parseInt(splitDirs[1]);
-                    west += moved;
+                    while (moved > 0){
+                        west++;
+                        getCoords();
+                        moved --;
+                    }
                     System.out.println("West is :" + west);
                 }
                 break;
@@ -142,7 +162,11 @@ public class Day1P1 {
                     String[] splitDirs = turn.split("[LR]");
                     //System.out.println("splitDirs = " + splitDirs[1]);
                     int moved = Integer.parseInt(splitDirs[1]);
-                    north += moved;
+                    while (moved > 0){
+                        north++;
+                        getCoords();
+                        moved --;
+                    }
                     System.out.println("North is :" + north);
                 }
                 else {
@@ -151,7 +175,11 @@ public class Day1P1 {
                     String[] splitDirs = turn.split("[LR]");
                     //System.out.println("splitDirs = " + splitDirs[1]);
                     int moved = Integer.parseInt(splitDirs[1]);
-                    south += moved;
+                    while (moved > 0){
+                        south++;
+                        getCoords();
+                        moved --;
+                    }
                     System.out.println("South is :" + south);
                 }
                 break;
@@ -162,7 +190,11 @@ public class Day1P1 {
                     String[] splitDirs = turn.split("[LR]");
                     //System.out.println("splitDirs = " + splitDirs[1]);
                     int moved = Integer.parseInt(splitDirs[1]);
-                    south += moved;
+                    while (moved > 0){
+                        south++;
+                        getCoords();
+                        moved --;
+                    }
                     System.out.println("South is :" + south);
                 }
                 else {
@@ -171,7 +203,11 @@ public class Day1P1 {
                     String[] splitDirs = turn.split("[LR]");
                     //System.out.println("splitDirs = " + splitDirs[1]);
                     int moved = Integer.parseInt(splitDirs[1]);
-                    north += moved;
+                    while (moved > 0){
+                        north++;
+                        getCoords();
+                        moved --;
+                    }
                     System.out.println("North is :" + north);
                 }
                 break;
@@ -180,6 +216,26 @@ public class Day1P1 {
         }
         
         return currentDir;
+    }
+    
+    public void getCoords(){
+        int vert = north - south;
+        int horiz = east - west;
+        
+        int[] coordinate = {horiz, vert};
+        System.out.println("coordinates to add: " + Arrays.toString(coordinate));
+
+        for(int[] oneCoord: locations){
+            //System.out.println("running");
+            //System.out.println(Arrays.toString(oneCoord));
+            if (Arrays.equals(oneCoord, coordinate)){
+                System.out.println("The new coordinates are: " + Arrays.toString(coordinate));
+                System.out.println("REAL Easter Bunny HQ is " + (Math.abs(vert) + Math.abs(horiz)) + " blocks away");
+                System.exit(0);
+            }
+            
+        }
+        locations.add(coordinate);
     }
     
     public static void main(String[] args) {
