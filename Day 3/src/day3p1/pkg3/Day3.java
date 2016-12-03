@@ -36,7 +36,6 @@ public class Day3 {
     
     public Boolean isTriangle(String line){
         Pattern numPattern = Pattern.compile("\\s*(\\d*)\\s*(\\d*)\\s*(\\d*)");
-        //\\s*(\\d*)\\s*(\\d*)\\s*(\\d*)
         
         Matcher m = numPattern.matcher(line);
         
@@ -49,8 +48,17 @@ public class Day3 {
             //System.out.println("Side 2 " + secondSide);
             //System.out.println("Side 3 " + thirdSide);
             
-            if((firstSide + secondSide) > thirdSide){
-                return true;
+            int max = Math.max(Math.max(firstSide, secondSide), thirdSide);
+            System.out.println("max is " + max);
+            if(max == firstSide){
+                return (thirdSide+secondSide) > firstSide;
+            }
+            else if (max == secondSide){
+                return (firstSide+thirdSide) > secondSide;
+            }
+            else if (max == thirdSide){
+                return (firstSide+secondSide) > thirdSide;
+                
             }
             else return false;
         }
