@@ -19,6 +19,8 @@ public class Day6 {
     ArrayList<Map<Character, Integer>> dictionaries = new ArrayList<>();
     
     
+    
+    
     public Map<Character, Integer> sortDictionary(Map<Character, Integer> dictionary){
         //System.out.println("reached the sortDictionary function");
         Map<Character, Integer> map = new TreeMap<Character, Integer>(dictionary);
@@ -43,15 +45,13 @@ public class Day6 {
             else{
                 int i = 0;
                 while(i < 8){
-                    switch(i){
-                        
-                    }
+                    System.out.println("index is + " + i);
+                    buildDictionary(line.charAt(i), dictionaries.get(i));
+                    i++;
                 }
             }
             
-            
         }
-        
     }
     
     public Map<Character, Integer> buildDictionary(char c, Map<Character, Integer> dictionary){
@@ -73,12 +73,40 @@ public class Day6 {
         return dictionary;
     }
     
+    public Character getMaxChar(Map<Character, Integer> dictionary){
+        Integer highest = 0;
+        Character highChar = '0';
+        
+        for(Character c: dictionary.keySet()){
+            Integer val = dictionary.get(c);
+            if(val > highest){
+                highest = val;
+                highChar = c;
+            }
+        }
+        
+        return highChar;
+    }
+    
     public static void main(String[] args) {
         // TODO code application logic here
         Day6 d6 = new Day6();
+        
+        for(int i = 0; i < 8; i++){
+            Map<Character, Integer> dictionary = new HashMap<>();
+            d6.dictionaries.add(dictionary);
+        }
+        
         Scanner sc = new Scanner(System.in);
         System.out.println("What is your input?");
         
+        d6.parseInput(sc);
+        
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < 8; i++){
+            sb.append(d6.getMaxChar(d6.dictionaries.get(i)));
+        }
+        System.out.println("The word is " + sb);
         
     }
     
