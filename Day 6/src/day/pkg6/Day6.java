@@ -17,23 +17,7 @@ public class Day6 {
      * @param args the command line arguments
      */
     ArrayList<Map<Character, Integer>> dictionaries = new ArrayList<>();
-    
-    
-    
-    
-    public Map<Character, Integer> sortDictionary(Map<Character, Integer> dictionary){
-        //System.out.println("reached the sortDictionary function");
-        Map<Character, Integer> map = new TreeMap<Character, Integer>(dictionary);
-        
-        //System.out.println("In the sorting function:");
-        for (Character key : map.keySet()) { 
-           // do something
-            //System.out.println(key);
-        }
-        
-        return map;
-    }
-    
+
     public void parseInput(Scanner sc){
         
         while(sc.hasNext()){
@@ -45,12 +29,11 @@ public class Day6 {
             else{
                 int i = 0;
                 while(i < 8){
-                    System.out.println("index is + " + i);
+                    //System.out.println("index is + " + i);
                     buildDictionary(line.charAt(i), dictionaries.get(i));
                     i++;
                 }
             }
-            
         }
     }
     
@@ -88,6 +71,21 @@ public class Day6 {
         return highChar;
     }
     
+    public Character getMinChar(Map<Character, Integer> dictionary){
+        Integer lowest = 25;
+        Character lowChar = '0';
+        
+        for(Character c: dictionary.keySet()){
+            Integer val = dictionary.get(c);
+            if(val < lowest){
+                lowest = val;
+                lowChar = c;
+            }
+        }
+        
+        return lowChar;
+    }
+    
     public static void main(String[] args) {
         // TODO code application logic here
         Day6 d6 = new Day6();
@@ -106,8 +104,13 @@ public class Day6 {
         for(int i = 0; i < 8; i++){
             sb.append(d6.getMaxChar(d6.dictionaries.get(i)));
         }
-        System.out.println("The word is " + sb);
+        System.out.println("The word for p1 is " + sb);
         
+        StringBuilder sb2 = new StringBuilder();
+        for(int i = 0; i < 8; i++){
+            sb2.append(d6.getMinChar(d6.dictionaries.get(i)));
+        }
+        System.out.println("The word for p2 is " + sb2);
     }
     
 }
