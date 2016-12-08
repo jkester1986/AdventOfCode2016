@@ -26,11 +26,11 @@ public class Day7 {
         Pattern exclude = Pattern.compile(".*\\[\\w*(\\w)((?!\\1)\\w)\\2\\1\\w*\\].*");
         
         Pattern abaPat1 = Pattern.compile("^(?:\\w*\\[\\w*\\])*\\w*(\\w)(?!\\1)(\\w)\\1.*\\[\\w*(\\2\\1\\2)\\w*\\].*");
-        //first pattern ! in [...], second is
+        //aba ! in [...], bab is
         //without double escapes ^(?:\w*\[\w*\])*\w*(\w)(?!\1)(\w)\1.*\[\w*(\2\1\2)\w*\].*
         
         Pattern abaPat2 = Pattern.compile("^.*(\\[\\w*(\\w)((?!\\2)\\w)\\2\\w*\\])(?:\\w*\\[\\w*\\])*\\w*(\\3\\2\\3).*");
-        //first pattern in [....] but second not
+        //aba in [..], bab is not
         //without double escapes: ^.*(\[\w*(\w)((?!\2)\w)\2\w*\])(?:\w*\[\w*\])*\w*(\3\2\3).*
         
         while(sc.hasNext()){
