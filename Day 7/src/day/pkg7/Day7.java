@@ -25,9 +25,12 @@ public class Day7 {
         Pattern goal = Pattern.compile(".*(\\w)((?!\\1)\\w)\\2\\1.*");
         Pattern exclude = Pattern.compile(".*\\[\\w*(\\w)((?!\\1)\\w)\\2\\1\\w*\\].*");
         
-        Pattern abaPat = Pattern.compile("\\w*[^\\[]\\w*(\\w)((?!\\1)\\w)\\1\\w*[^\\]]\\w*\\2\\1\\2.*");
-        //.*[^\[]\w*(\w)((?!\1)\w)\1\w*[^\]].*\2\1\2.*
-        //\w*[^\[]\w*(\w)((?!\1)\w)\1\w*[^\]]\w*\2\1\2.*
+        Pattern abaPat1 = Pattern.compile("^(?:\\w*\\[\\w*\\])*\\w*(\\w)(?!\\1)(\\w)\\1.*\\[\\w*(\\2\\1\\2)\\w*\\].*");
+        //first pattern ! in [...], second is
+        //without double escapes onsratzqtrprdjvbuqeadkqywnv[khedkgqsfwdsnwxibu]pkdqpplprpldnufkqpq
+        Pattern abaPat2 = Pattern.compile("^.*(\\[\\w*(\\w)((?!\\2)\\w)\\2\\w*\\])(?:\\w*\\[\\w*\\])*\\w*(\\3\\2\\3).*");
+        //first pattern in [....] but second not
+        //^.*(\[\w*(\w)((?!\2)\w)\2\w*\])(?:\w*\[\w*\])*\w*(\3\2\3).*
         
         while(sc.hasNext()){
             String nextLine = sc.next();
@@ -36,7 +39,8 @@ public class Day7 {
                 Matcher goalMatch = goal.matcher(nextLine);
                 Matcher badMatch = exclude.matcher(nextLine);
                 
-                Matcher sslMatcher = abaPat.matcher(nextLine);
+                Matcher sslMatcher1 = abaPat1.matcher(nextLine);
+                Matcher sslMatcher2 = abaPat2.matcher(nextLine);
                 
                 if(goalMatch.matches() && !badMatch.matches()){
                     //System.out.println("valid IP :");
@@ -45,9 +49,9 @@ public class Day7 {
                     goodIPs ++;
                 }
                 
-                if(sslMatcher.matches()){
-                    System.out.println(nextLine);
-                    System.out.println("");
+                if(sslMatcher1.matches() || sslMatcher2.matches()){
+                    //System.out.println(nextLine);
+                    //System.out.println("");
                     sslSupportCount++;
                 }
             }
