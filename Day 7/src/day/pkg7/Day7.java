@@ -27,10 +27,11 @@ public class Day7 {
         
         Pattern abaPat1 = Pattern.compile("^(?:\\w*\\[\\w*\\])*\\w*(\\w)(?!\\1)(\\w)\\1.*\\[\\w*(\\2\\1\\2)\\w*\\].*");
         //first pattern ! in [...], second is
-        //without double escapes onsratzqtrprdjvbuqeadkqywnv[khedkgqsfwdsnwxibu]pkdqpplprpldnufkqpq
+        //without double escapes ^(?:\w*\[\w*\])*\w*(\w)(?!\1)(\w)\1.*\[\w*(\2\1\2)\w*\].*
+        
         Pattern abaPat2 = Pattern.compile("^.*(\\[\\w*(\\w)((?!\\2)\\w)\\2\\w*\\])(?:\\w*\\[\\w*\\])*\\w*(\\3\\2\\3).*");
         //first pattern in [....] but second not
-        //^.*(\[\w*(\w)((?!\2)\w)\2\w*\])(?:\w*\[\w*\])*\w*(\3\2\3).*
+        //without double escapes: ^.*(\[\w*(\w)((?!\2)\w)\2\w*\])(?:\w*\[\w*\])*\w*(\3\2\3).*
         
         while(sc.hasNext()){
             String nextLine = sc.next();
@@ -43,15 +44,10 @@ public class Day7 {
                 Matcher sslMatcher2 = abaPat2.matcher(nextLine);
                 
                 if(goalMatch.matches() && !badMatch.matches()){
-                    //System.out.println("valid IP :");
-                    //System.out.println(nextLine);
-                    //System.out.println("");
                     goodIPs ++;
                 }
                 
                 if(sslMatcher1.matches() || sslMatcher2.matches()){
-                    //System.out.println(nextLine);
-                    //System.out.println("");
                     sslSupportCount++;
                 }
             }
