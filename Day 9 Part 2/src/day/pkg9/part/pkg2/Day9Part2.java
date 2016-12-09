@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package day.pkg8.part.pkg2;
+package day.pkg9.part.pkg2;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
  *
  * @author jkester
  */
-public class Day8Part2 {
+public class Day9Part2 {
 
     
     public void parseInput(Scanner sc){
@@ -66,7 +66,7 @@ public class Day8Part2 {
     
     public static void main(String[] args) {
 
-        Day8Part2 d8 = new Day8Part2();
+        Day9Part2 d8 = new Day9Part2();
         Scanner sc = new Scanner(System.in);
         System.out.println("What is your input?");
         d8.parseInput(sc);
