@@ -43,10 +43,10 @@ public class Floors {
     }
     
     public Floors(Floors another) {
-        this.floor1 = another.floor1; // you can access  
-        this.floor2 = another.floor2;
-        this.floor3 = another.floor3;
-        this.floor4 = another.floor4;
+        this.floor1 =  new ArrayList<String>(another.floor1); // you can access  
+        this.floor2 = new ArrayList<String>(another.floor2);
+        this.floor3 = new ArrayList<String>(another.floor3);
+        this.floor4 = new ArrayList<String>(another.floor4);
         this.location = another.location;
     }
     
@@ -181,13 +181,13 @@ public class Floors {
     
     public boolean isFloorValid(ArrayList<String> onFloor){
         
-        Pattern p = Pattern.compile("^(\\w)M$");
+        Pattern p = Pattern.compile("^(\\w+)m$");
         
         for (String s: onFloor){
             Matcher m = p.matcher(s);
             
             if(m.matches()){
-                String pair = m.group(1) + "G";
+                String pair = m.group(1) + "g";
                 if(!onFloor.contains(pair)) return false;
             }
             

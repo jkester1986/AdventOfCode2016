@@ -26,84 +26,79 @@ public class Day11 {
     
     int[] totFloors = {1,2,3,4};
     
-    ArrayList<Floors> states = new ArrayList<Floors>();
+    Set<Floors> allStates = new HashSet<Floors>();
+    ArrayList<Floors> currentLevelStates = new ArrayList();
+    ArrayList<Floors> futureLevelStates = new ArrayList();
     
     Floors endFloors = new Floors();
     
     
     public int takeSteps(){//do I need to track old combo/location?
         int steps = 0;
-        ArrayList<Floors> toRemove = new ArrayList();
+        boolean found = false;
         
-        while(states.size() != 0){
-            steps ++;
-            int end = states.size();
+        while(!found){
+            steps++;
+            System.out.println("You are at stepcount " + steps);
+            System.out.println("Here are all the current states: ");
+            for(Floors fState: currentLevelStates){
+                fState.printFloors();
+            }
             
-            for(int i = 0; i < end; i++){//go through all states at current step level
-                int floorLevel = states.get(i).getLocation();
-                states.get(i).printFloors();
-                ArrayList<ICombinatoricsVector<String>> allCombos = getCombos(floorLevel, states.get(i));
-                
-                System.out.println("The combos are:");
+            for(Floors fState: currentLevelStates){//for every state at this level
+                ArrayList<ICombinatoricsVector<String>> allCombos = getCombos(fState.getLocation(), fState);
                 for(ICombinatoricsVector<String> vector: allCombos){
-                    for(String s: vector){
-                        System.out.print(s + ",");
-                    }
-                    System.out.print("\n");
+                    System.out.println(vector);
                 }
                 System.out.println("");
                 
-                for (ICombinatoricsVector<String> vector: allCombos){
-                    System.out.println("The state we are examining is:");
-                    states.get(i).printFloors();
-                    Floors original = new Floors(states.get(i));
-                    System.out.println("original:");
-                    original.printFloors();
-                    Floors current = new Floors(states.get(i));
-                    current.printFloors();
-                    for(String s: vector){
-                        current.removeFromFloor(floorLevel, s);
-                    }
-                    System.out.println("state after removal:");
-                    current.printFloors();
-                    if(current.isFloorValid(floorLevel)){
-                        //add them to the new floor, trying all floor combos
-                        for(int f = 1; f < 5; f++){
-                            if(f  != floorLevel){
-                                current.changeLocation(f);
-                                Floors newStatePartial = new Floors(current);
+                for(ICombinatoricsVector<String> vector: allCombos){//for every combination we COULD move on the current floor
+                    
+                    for(int i = 1; i < 5; i++){//look at all floors we could move to
+                        Floors currentState = new Floors(fState);//create a new state each time we look at a differen combination
+                        int currentFloor = currentState.getLocation();
+                        if(i != currentFloor){//as long as we aren't already on this floor
+                            for(String s: vector){//for each string in the combo
+                                currentState.removeFromFloor(currentFloor, s);//remove the string from the floor we're on
+                            }
+                            if(currentState.isFloorValid(currentFloor)){//as long as we are leaving a floor valid
+                                currentState.changeLocation(i);//make sure we move to the floor we want to be on
                                 for(String s: vector){
-                                    newStatePartial.addToFloor(f, s);
+                                    currentState.addToFloor(i, s);
                                 }
-                                //check to see if new floor is also valid
-                                if(newStatePartial.isFloorValid(f)){
-                                    states.add(newStatePartial);//add newest state to the queue
-                                    if(newStatePartial.equals(endFloors)){
-                                        System.out.println("took " + steps + "to complete");
+                                
+                                if(currentState.isFloorValid(i)){//check new floor to make sure we aren't bringing anything dangerous
+                                    if(!allStates.contains(currentState)){//if the state doesn't exist in our set of states yet
+                                        if(endFloors.equals(currentState)){
+                                            //this is our goal state
+                                            System.out.println("Congratulations, puzzle solved! It took only " + steps + "steps!");
+                                            found = true;
+                                            return steps;
+                                        }
+                                        else{
+                                            allStates.add(currentState);//add it to the list of sets
+                                            futureLevelStates.add(currentState);//also add it to the next set of states to look at
+                                        }
+                                        
                                     }
                                 }
-                                else{
-                                    System.out.println("can't leave those on floor " + f);
-                                }
-                                current.changeLocation(floorLevel);
                             }
                         }
                     }
-                    else{
-                        System.out.println("The floor is not valid");
-                    }//do nothing if the floor isn't valid
                 }
-                toRemove.add(states.get(i));
+            }
+            System.out.println("THERE ARE " + futureLevelStates.size() + " STATES TO LOOK AT NEXT");
+            System.out.println("and " + allStates.size() + " states in the set of all states");
+            
+            currentLevelStates = new ArrayList<Floors>(futureLevelStates);
+            futureLevelStates = new ArrayList<Floors>();
+            if(currentLevelStates.size() == 0){
+                System.out.println("reached the end, didn't find anything");
+                System.out.println("Here are all the sets though: ");
                 return steps;
             }
-            
-            for(Floors f: toRemove){
-                states.remove(f);
-            }
-            
         }
         
-        //return currentSteps;
         return steps;
     }
     
@@ -156,10 +151,12 @@ public class Day11 {
         // TODO code application logic here
         Day11 d11 = new Day11();
         d11.endFloors.getFinal();
+        d11.endFloors.printFloors();
         
         Floors initialState = new Floors(d11.floors);
         
-        d11.states.add(initialState);
+        d11.allStates.add(initialState);
+        d11.currentLevelStates.add(initialState);
         
         System.out.println("steps taken: " + d11.takeSteps());
     }
