@@ -8,6 +8,8 @@ package day.pkg11;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class Floors {
@@ -179,7 +181,19 @@ public class Floors {
     
     public boolean isFloorValid(ArrayList<String> onFloor){
         
-        return false;
+        Pattern p = Pattern.compile("^(\\w)M$");
+        
+        for (String s: onFloor){
+            Matcher m = p.matcher(s);
+            
+            if(m.matches()){
+                String pair = m.group(1) + "G";
+                if(!onFloor.contains(pair)) return false;
+            }
+            
+        }
+        
+        return true;
     }
     
     public Floors getFinal(){
@@ -202,22 +216,26 @@ public class Floors {
     
     public void printFloors(){
         System.out.println("on floor " + location);
+        System.out.print("1:");
        for(String s: floor1){
             System.out.print(s + ", ");
        } 
        System.out.print("\n");
+       System.out.print("2:");
        for(String s: floor2){
             System.out.print(s + ", ");
        }
        System.out.print("\n");
+       System.out.print("3:");
        for(String s: floor3){
             System.out.print(s + ", ");
        }
        System.out.print("\n");
+       System.out.print("4:");
        for(String s: floor4){
             System.out.print(s + ", ");
        }
-       System.out.print("\n");
+       System.out.print("\n\n");
     }
     
     @Override

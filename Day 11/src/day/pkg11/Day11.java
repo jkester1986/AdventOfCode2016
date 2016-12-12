@@ -22,119 +22,113 @@ public class Day11 {
     int lowestFinal = 0;
     int currentSteps = 1;
     
-    Elevator elevator = new Elevator();
     Floors floors = new Floors();
     
     int[] totFloors = {1,2,3,4};
     
-    Set<Floors> usedStates = new HashSet<Floors>();
+    ArrayList<Floors> states = new ArrayList<Floors>();
     
     Floors endFloors = new Floors();
     
     
-    public void takeSteps(int floor){//do I need to track old combo/location?
+    public int takeSteps(){//do I need to track old combo/location?
+        int steps = 0;
+        ArrayList<Floors> toRemove = new ArrayList();
         
-        
-        System.out.println("Current floor state: ");
-        floors.printFloors();
-        if(endFloors.equals(floor)){
-            //solution found!
-            System.out.println("end floor match!");
-            System.out.println("steps taken: " + currentSteps);
-            lowestFinal = currentSteps;
-        }
-        
-        if(lowestFinal != 0 && currentSteps > lowestFinal){
-            //exit out if the current steps taken is greater than the lowest final steps (when lowestFinal != 0
-            System.out.println("you've stepped through too many times");
-            return;
-        }
-        if(usedStates.contains(floor)){
-            //we don't want to visit states we've already been to
-            System.out.println("you've already visited this state");
-            return;
-        }
-        else{
+        while(states.size() != 0){
+            steps ++;
+            int end = states.size();
             
-            System.out.println("got through the beginning");
-            Floors newFloor = new Floors(floors);
-            usedStates.add(newFloor);
-        
-            int loc = floors.getLocation();
-
-            //get all the combinations possible for the current floor
-            ArrayList<ICombinatoricsVector<String>> combos = getCombos(loc);
-            for(ICombinatoricsVector<String> combo: combos){
-                System.out.println("current combo: " + combo);
+            for(int i = 0; i < end; i++){//go through all states at current step level
+                int floorLevel = states.get(i).getLocation();
+                states.get(i).printFloors();
+                ArrayList<ICombinatoricsVector<String>> allCombos = getCombos(floorLevel, states.get(i));
                 
-
-                for(int i: totFloors){
-
-                    if(loc != i){
-                        for(String s: combo){
-                            //move combo out of current floor
-                            floors.removeFromFloor(floor, s);
-                            //move combo into next floor
-                            floors.addToFloor(i, s);
-                        }
-                        
-                        //check if floor is valid
-                        floors.changeLocation(i);
-                        currentSteps++;
-
-                        //if(currentSteps > lowestFinal) return;//if the current steps are going to far, don't bother
-
-                        //TODO: check for floor, change floor, make sure we aren't moving to a state we've already been to
-                        takeSteps(i);//do I need to return here??? or just run it?
-
-                        //reverse all the things after stepping through:
-                        currentSteps--;
-                        floors.changeLocation(loc);
-                        for(String s: combo){
-                            //move combo back to current floor
-                            floors.removeFromFloor(i, s);
-                            //move combo out of next floor
-                            floors.addToFloor(floor, s);
+                System.out.println("The combos are:");
+                for(ICombinatoricsVector<String> vector: allCombos){
+                    for(String s: vector){
+                        System.out.print(s + ",");
+                    }
+                    System.out.print("\n");
+                }
+                System.out.println("");
+                
+                for (ICombinatoricsVector<String> vector: allCombos){
+                    System.out.println("The state we are examining is:");
+                    states.get(i).printFloors();
+                    Floors original = new Floors(states.get(i));
+                    System.out.println("original:");
+                    original.printFloors();
+                    Floors current = new Floors(states.get(i));
+                    current.printFloors();
+                    for(String s: vector){
+                        current.removeFromFloor(floorLevel, s);
+                    }
+                    System.out.println("state after removal:");
+                    current.printFloors();
+                    if(current.isFloorValid(floorLevel)){
+                        //add them to the new floor, trying all floor combos
+                        for(int f = 1; f < 5; f++){
+                            if(f  != floorLevel){
+                                current.changeLocation(f);
+                                Floors newStatePartial = new Floors(current);
+                                for(String s: vector){
+                                    newStatePartial.addToFloor(f, s);
+                                }
+                                //check to see if new floor is also valid
+                                if(newStatePartial.isFloorValid(f)){
+                                    states.add(newStatePartial);//add newest state to the queue
+                                    if(newStatePartial.equals(endFloors)){
+                                        System.out.println("took " + steps + "to complete");
+                                    }
+                                }
+                                else{
+                                    System.out.println("can't leave those on floor " + f);
+                                }
+                                current.changeLocation(floorLevel);
+                            }
                         }
                     }
-
+                    else{
+                        System.out.println("The floor is not valid");
+                    }//do nothing if the floor isn't valid
                 }
-
-                //be sure to subtract current steps out (maybe farther up?)
-
+                toRemove.add(states.get(i));
+                return steps;
             }
             
-            //make sure to remove the used state when going backward
-            usedStates.remove(newFloor);
+            for(Floors f: toRemove){
+                states.remove(f);
+            }
+            
         }
         
-        
         //return currentSteps;
-        return;
+        return steps;
     }
     
-    public ArrayList<ICombinatoricsVector<String>> getCombos(int floorNum){Generator<String> gen;
+    public ArrayList<ICombinatoricsVector<String>> getCombos(int floorNum, Floors floor){Generator<String> gen;
         ArrayList<ICombinatoricsVector<String>> allCombos = new ArrayList();//hold all the combinations
     
         switch(floorNum){
            case 1:
-               ICombinatoricsVector<String> comb = Factory.createVector(floors.floor1);
+               ICombinatoricsVector<String> comb = Factory.createVector(floor.floor1);
                Generator<String> gen1 = Factory.createSimpleCombinationGenerator(comb, 1);
                Generator<String> gen2 = Factory.createSimpleCombinationGenerator(comb, 2);
                allCombos = mergeCombos(gen1, gen2);
                return allCombos;
            case 2:
-               ICombinatoricsVector<String> comb2 = Factory.createVector(floors.floor2);
+               ICombinatoricsVector<String> comb2 = Factory.createVector(floor.floor2);
                allCombos = mergeCombos(Factory.createSimpleCombinationGenerator(comb2, 1), 
                        Factory.createSimpleCombinationGenerator(comb2, 2));
                return allCombos;
            case 3:
-               ICombinatoricsVector<String> comb3 = Factory.createVector(floors.floor3);
+               ICombinatoricsVector<String> comb3 = Factory.createVector(floor.floor3);
                allCombos = mergeCombos(Factory.createSimpleCombinationGenerator(comb3, 1), 
                        Factory.createSimpleCombinationGenerator(comb3, 2));
                return allCombos;
            case 4:
-               ICombinatoricsVector<String> comb4 = Factory.createVector(floors.floor4);
+               ICombinatoricsVector<String> comb4 = Factory.createVector(floor.floor4);
                allCombos = mergeCombos(Factory.createSimpleCombinationGenerator(comb4, 1), 
                        Factory.createSimpleCombinationGenerator(comb4, 2));
                return allCombos;
@@ -161,14 +155,13 @@ public class Day11 {
     public static void main(String[] args) {
         // TODO code application logic here
         Day11 d11 = new Day11();
-        
-        
-        
         d11.endFloors.getFinal();
         
+        Floors initialState = new Floors(d11.floors);
         
-        d11.takeSteps(1);
-        System.out.println("least num of steps is " + d11.lowestFinal);
+        d11.states.add(initialState);
+        
+        System.out.println("steps taken: " + d11.takeSteps());
     }
     
 }
