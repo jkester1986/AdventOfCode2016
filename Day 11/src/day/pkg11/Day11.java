@@ -55,19 +55,27 @@ public class Day11 {
                 for(ICombinatoricsVector<String> vector: allCombos){//for every combination we COULD move on the current floor
                     
                     for(int i = 1; i < 5; i++){//look at all floors we could move to
+                        
                         Floors currentState = new Floors(fState);//create a new state each time we look at a differen combination
                         int currentFloor = currentState.getLocation();
+                        
                         if(i != currentFloor){//as long as we aren't already on this floor
+                            if(i == 3)System.out.println("hit 3");
                             for(String s: vector){//for each string in the combo
                                 currentState.removeFromFloor(currentFloor, s);//remove the string from the floor we're on
                             }
+                            
                             if(currentState.isFloorValid(currentFloor)){//as long as we are leaving a floor valid
                                 currentState.changeLocation(i);//make sure we move to the floor we want to be on
                                 for(String s: vector){
                                     currentState.addToFloor(i, s);
                                 }
-                                
+                                if(i == 3){
+                                    currentState.printFloors();
+                                }
                                 if(currentState.isFloorValid(i)){//check new floor to make sure we aren't bringing anything dangerous
+                                    System.out.println("this is a valid state: " );
+                                    currentState.printFloors();
                                     if(!allStates.contains(currentState)){//if the state doesn't exist in our set of states yet
                                         if(endFloors.equals(currentState)){
                                             //this is our goal state
@@ -151,6 +159,7 @@ public class Day11 {
         // TODO code application logic here
         Day11 d11 = new Day11();
         d11.endFloors.getFinal();
+        System.out.println("end state to find:");
         d11.endFloors.printFloors();
         
         Floors initialState = new Floors(d11.floors);

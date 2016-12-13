@@ -27,14 +27,14 @@ public class Floors {
         floor1.add("promg");
         Collections.sort(floor1);
         
-        floor2.add("cobg");
-        floor2.add("curg");
+        floor2.add("cobag");
+        floor2.add("curig");
         floor2.add("ruthg");
         floor2.add("plutg");
         Collections.sort(floor2);
         
-        floor3.add("cobm");
-        floor3.add("curm");
+        floor3.add("cobam");
+        floor3.add("curim");
         floor3.add("ruthm");
         floor3.add("plutm");
         Collections.sort(floor3);
@@ -181,16 +181,25 @@ public class Floors {
     
     public boolean isFloorValid(ArrayList<String> onFloor){
         
-        Pattern p = Pattern.compile("^(\\w+)m$");
+        Pattern p = Pattern.compile("^(\\w{4})m$");
+        Pattern p2 = Pattern.compile("^\\w{4}(g)");
+        int generators = 0;
         
         for (String s: onFloor){
+            Matcher m = p2.matcher(s);
+            
+            if(m.matches()){
+                generators++;
+            }
+        }
+        
+        for (String s : onFloor){
             Matcher m = p.matcher(s);
             
             if(m.matches()){
                 String pair = m.group(1) + "g";
-                if(!onFloor.contains(pair)) return false;
+                if(!onFloor.contains(pair) && generators > 0) return false;
             }
-            
         }
         
         return true;
