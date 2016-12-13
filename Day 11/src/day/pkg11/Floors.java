@@ -181,27 +181,33 @@ public class Floors {
     
     public boolean isFloorValid(ArrayList<String> onFloor){
         
-        Pattern p = Pattern.compile("^(\\w{4})m$");
-        Pattern p2 = Pattern.compile("^\\w{4}(g)");
-        int generators = 0;
+        Pattern p = Pattern.compile("^\\w{4}(g)$");
+        Pattern p2 = Pattern.compile("^(\\w{4})m$");
         
-        for (String s: onFloor){
-            Matcher m = p2.matcher(s);
-            
-            if(m.matches()){
-                generators++;
-            }
-        }
+        int generators = 0;//start off with no generators
         
-        for (String s : onFloor){
+        for (String s: onFloor){//look through every string on the floor
             Matcher m = p.matcher(s);
             
-            if(m.matches()){
-                String pair = m.group(1) + "g";
-                if(!onFloor.contains(pair) && generators > 0) return false;
+            if(m.matches()){//if it matches pattern 1 (ends with g)
+                generators++;//increase the generator count by 1
             }
         }
         
+        for (String s : onFloor){//go through all the strings on the floor again
+            Matcher m = p2.matcher(s);
+            
+            if(m.matches()){//this time match with the first pattern
+                String pair = m.group(1) + "g";//create a new string from the letters in group 1, add g onto the end
+                
+                //if there is more than one generator on the floor
+                //and none of the generators match with the microchip
+                //then it's not a valid floor
+                if(generators > 0 && !onFloor.contains(pair)) return false;
+            }
+        }
+        
+        //in all other cases, floor is valid
         return true;
     }
     
