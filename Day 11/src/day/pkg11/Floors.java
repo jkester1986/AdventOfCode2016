@@ -25,6 +25,10 @@ public class Floors {
     public Floors(){
         floor1.add("promm");
         floor1.add("promg");
+        floor1.add("elerm");
+        floor1.add("elerg");
+        floor1.add("dilim");
+        floor1.add("dilig");
         Collections.sort(floor1);
         
         floor2.add("cobag");
