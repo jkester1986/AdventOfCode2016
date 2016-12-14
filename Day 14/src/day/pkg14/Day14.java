@@ -20,9 +20,9 @@ import java.util.logging.Logger;
  */
 public class Day14 {
 
-    Pattern p = Pattern.compile(".*(.)\\1\\1.*");
+    Pattern p = Pattern.compile("(.)\\1\\1");
     
-    String key = "abc";
+    String key = "zpqevtbw";
     Map<String, Integer> padKeys = new HashMap<String, Integer>();
     
     boolean found64 = false;
@@ -40,8 +40,9 @@ public class Day14 {
             Matcher m = p.matcher(hash);
             
             String s = "";
-            if(m.matches()){
+            while(m.find()){
                 s = m.group(1);
+                break;
             }
             
             int count2 = count+1;
@@ -50,10 +51,12 @@ public class Day14 {
             
             //System.out.println("looking at " + count);
             
+            /*
             if(!s.isEmpty()){
                 System.out.println("the hash is " + hash);
                 System.out.println("The triplet char is " + s);
             }
+            */
             while(!found5){ 
                 if(count2 <= (count+1000)){
                     //System.out.println("count2 in loop: " + count2);
@@ -72,9 +75,9 @@ public class Day14 {
 
                         Matcher match3 = matchOrig.matcher(hash2);
                         if(match3.matches()){
+                            //System.out.println("The key is " + count + ", hash " + hash);
+                            //System.out.println("found 5 " + s + " in a row here: " + hash2 + " at index " + count2);
                             
-                            System.out.println("found 5 " + s + " in a row here: " + hash2 + " at index " + count2);
-                            System.out.println("The key is " + count);
                             padKeys.put(hash, count);
                             totPadKeys++;
                             found5 = true;
@@ -85,7 +88,7 @@ public class Day14 {
                 else break;
                 count2++;
             }
-            if(totPadKeys == 64){
+            if(padKeys.size() == 64){
                 System.out.println("The index that gives the 64th padkey is " + count);
                 found64 = true;
             }
