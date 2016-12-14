@@ -50,18 +50,8 @@ public class Day14 {
             }
             
             int count2 = count+1;
-            //System.out.println("count2: " + count2);
             boolean found5 = false;
-            
-            //System.out.println("looking at " + count);
-            
-            /*
-            if(!s.isEmpty()){
-                System.out.println("the hash is " + hash + " at index " + count);
-                System.out.println("The triplet char is " + s);
-            }
-*/
-            
+             
             while(!found5){ 
                 if(count2 <= (count+1000)){
                     
@@ -79,7 +69,6 @@ public class Day14 {
                                     
                         } 
                         
-                        //if(count2 = 89) System.out.println("");
                         catch (NoSuchAlgorithmException ex) {
                             Logger.getLogger(Day14.class.getName()).log(Level.SEVERE, null, ex);
                         }
