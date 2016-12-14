@@ -22,12 +22,12 @@ public class Day14 {
 
     Pattern p = Pattern.compile("(.)\\1\\1");
     
-    String key = "zpqevtbw";
+    String key = "abc";
     Map<String, Integer> padKeys = new HashMap<String, Integer>();
     
     boolean found64 = false;
     
-    int count = 1;
+    int count = 0;
     int totPadKeys = 0;
     
     public void findKeys()throws NoSuchAlgorithmException{
@@ -36,6 +36,10 @@ public class Day14 {
             
             String combo = key + count;
             String hash = getHash(combo);
+            
+            for(int i = 0; i < 2016; i++){
+                hash = getHash(hash);
+            }
             
             Matcher m = p.matcher(hash);
             
@@ -51,15 +55,15 @@ public class Day14 {
             
             //System.out.println("looking at " + count);
             
-            /*
+            
             if(!s.isEmpty()){
-                System.out.println("the hash is " + hash);
+                System.out.println("the hash is " + hash + " at index " + count);
                 System.out.println("The triplet char is " + s);
             }
-            */
+            
             while(!found5){ 
                 if(count2 <= (count+1000)){
-                    //System.out.println("count2 in loop: " + count2);
+                    
                     if(!s.isEmpty()){
                         Pattern matchOrig = Pattern.compile(".*" + s + "{5}.*");
 
@@ -67,7 +71,14 @@ public class Day14 {
                         String hash2 = "";
                         try {
                             hash2 = getHash(combo2);
+                            
+                            for(int i = 0; i < 2016; i++){
+                                hash2 = getHash(hash2);
+                            }
+                                    
                         } 
+                        
+                        //if(count2 = 89) System.out.println("");
                         catch (NoSuchAlgorithmException ex) {
                             Logger.getLogger(Day14.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -75,8 +86,8 @@ public class Day14 {
 
                         Matcher match3 = matchOrig.matcher(hash2);
                         if(match3.matches()){
-                            //System.out.println("The key is " + count + ", hash " + hash);
-                            //System.out.println("found 5 " + s + " in a row here: " + hash2 + " at index " + count2);
+                            System.out.println("The key is " + count + ", hash " + hash);
+                            System.out.println("found 5 " + s + " in a row here: " + hash2 + " at index " + count2);
                             
                             padKeys.put(hash, count);
                             totPadKeys++;
