@@ -22,7 +22,7 @@ public class Day14 {
 
     Pattern p = Pattern.compile("(.)\\1\\1");
     
-    String key = "abc";
+    String key = "zpqevtbw";
     Map<String, Integer> padKeys = new HashMap<String, Integer>();
     
     boolean found64 = false;
@@ -55,11 +55,12 @@ public class Day14 {
             
             //System.out.println("looking at " + count);
             
-            
+            /*
             if(!s.isEmpty()){
                 System.out.println("the hash is " + hash + " at index " + count);
                 System.out.println("The triplet char is " + s);
             }
+*/
             
             while(!found5){ 
                 if(count2 <= (count+1000)){
