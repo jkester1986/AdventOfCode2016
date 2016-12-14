@@ -49,14 +49,16 @@ public class Day13 {
                 for(ArrayList<Integer> direction: directions){
                     x = direction.get(0);
                     y = direction.get(1);
-                    if(x > 0 && y > 0){
+                    if(x > -1 && y > -1){
                         if(x == 31 && y == 39){//found the ending location
+                        //if(x == 7 && y == 4){
                             System.out.println("You found (31, 39)! It took you " + steps + " steps");
                             return steps;
                         }
                         else if(!allStates.contains(direction) && !allRejections.contains(direction)){
                             int poly = x*x + 3*x + 2*x*y + y + y*y;
                             poly += 1358;
+                            //poly += 10;
                             
                             String binary = Integer.toBinaryString(poly);
                             
@@ -80,6 +82,7 @@ public class Day13 {
                     }
                 }
             }
+            //System.out.println(nextSet.size() + " coordinates were added this time");
             
             currentSet = new ArrayList<ArrayList<Integer>>(nextSet);
             nextSet = new ArrayList<ArrayList<Integer>>();
@@ -92,8 +95,8 @@ public class Day13 {
     }
     
     public void printMaze(){
-        for(int y = 0; y < 100; y++){
-            for(int x = 0; x < 100; x++){
+        for(int y = 1; y <= 100; y++){
+            for(int x = 1; x <= 100; x++){
                 int poly = x*x + 3*x + 2*x*y + y + y*y;
                     poly += 1358;
 
@@ -115,7 +118,7 @@ public class Day13 {
                         System.out.print("#");
                     }
             }
-            System.out.print("\n");
+            System.out.print(y + "\n");
         }
     }
     
