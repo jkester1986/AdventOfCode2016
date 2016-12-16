@@ -15,57 +15,45 @@ public class Day16 {
 
     String myInput = "10001110011110000";
     
-    ArrayList<String> a = new ArrayList();
+    ArrayList<Boolean> a = new ArrayList();
     
     public void expand(){
         int size = a.size();
         
-        while (size < 272){
-            a.add("0");
+        while (size < 35651584){
+            a.add(false);
             
             for(int i = size-1; i >= 0; i--){
-                String c = new String(a.get(i));
-                
-                switch(c){
-                    case "0":
-                        c = "1";
-                        break;
-                    case "1":
-                        c = "0";
-                        break;
-                    default: break;
-                }
-                
-                a.add(c);
+                Boolean c = a.get(i);
+                a.add(!c);
                 size = a.size();
-                if(size == 272) break;
+                if(size == 35651584) break;
             }
+            System.out.println("size: " + size);
+            
             /*
-            for(int i = 0; i < size; i++)
-                System.out.print(a.get(i));
+            for(int i = 0; i < size; i++){
+                if(a.get(i)) System.out.print(1);
+                else System.out.print(0);
+            }
             System.out.print("\n");
                     */
         }
     }
     
-    public ArrayList<String> checksum(ArrayList<String> list){
-        ArrayList<String> newList = new ArrayList();
+    public ArrayList<Boolean> checksum(ArrayList<Boolean> list){
+        ArrayList<Boolean> newList = new ArrayList();
         
         int size = list.size();
         for(int i = 0; i < size; i += 2){
-            String p1 = new String(list.get(i));
-            String p2 = new String(list.get(i+1));
-            String pair = p1 + p2;
+            Boolean p1 = list.get(i);
+            Boolean p2 = list.get(i+1);
             
-            switch(pair){
-                case "11":
-                case "00":
-                    newList.add("1");
-                    break;
-                case "01":
-                case "10":
-                    newList.add("0");
-                    break;
+            if(p1&&p2 || !p1&&!p2){
+                newList.add(true);
+            }
+            else{
+                newList.add(false);
             }
         }
         
@@ -78,13 +66,16 @@ public class Day16 {
         Day16 d16 = new Day16();
         
         int length = d16.myInput.length();
-        for(int i = 0; i < length; i++)
-            d16.a.add(d16.myInput.substring(i, i+1));
+        for(int i = 0; i < length; i++){
+            if(d16.myInput.charAt(i) == '1') d16.a.add(true);
+            else d16.a.add(false);
+        }
         
         d16.expand();
-        ArrayList<String> checksum = d16.checksum(d16.a);
+        ArrayList<Boolean> checksum = d16.checksum(d16.a);
         for(int i = 0; i < checksum.size(); i++){
-            System.out.print(checksum.get(i));
+            if(checksum.get(i)) System.out.print(1);
+            else System.out.print(0);
         }
         System.out.print("\n");
     }
