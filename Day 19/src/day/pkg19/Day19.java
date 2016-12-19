@@ -32,6 +32,8 @@ public class Day19 {
         return winningElf;
     }
     
+    /*
+    //Original, SLOW solution
     public int getWinningElf2(){
         Integer index = 0;
         
@@ -48,6 +50,51 @@ public class Day19 {
     
         return elves.get(0);
     }
+*/
+    /*New solution, someone tipped me off about the pattern
+    //pattern: 
+    //If the # of elves is a power of 3, that elf gets the presents
+    //Ainning elf increases by 1 after each power of three, up to last last power of 3 doubled
+    //After reaching the power of 3 doubled, the winning elf increase by 2 for every elf added
+    */
+    public int getWinningElf2(int elfCount){
+        int currentElf = elfCount;
+        
+        while(!isPower(3, currentElf)){
+            currentElf--;
+        }
+        
+        int goal = currentElf*2;
+        int winningElf = 0;
+        
+        for(int i = currentElf+1; i <= goal; i++){
+            winningElf++;
+            if(i == elfCount){
+                return winningElf;
+            }
+        }
+        
+        for(int i = goal; i <= elfCount; i++){
+            winningElf +=2;
+        }
+        
+        return winningElf;
+    }
+    
+    public static boolean isPower(int x, int y)
+    {
+        // The only power of 1 is 1 itself
+        if (x == 1)
+           return (y == 1);
+ 
+        // Repeatedly compute power of x
+        int pow = 1;
+        while(pow < y)
+           pow = pow * x;
+ 
+        // Check if power of x becomes y
+        return (pow == y);
+    }
     
     public static void main(String[] args) {
         // TODO code application logic here
@@ -58,7 +105,7 @@ public class Day19 {
             d19.elves.add(i+1);
         }
         
-        System.out.println("The winning elf for p2 is #" + d19.getWinningElf2());
+        System.out.println("The winning elf for p2 is #" + d19.getWinningElf2(3018458));
     }
     
 }
