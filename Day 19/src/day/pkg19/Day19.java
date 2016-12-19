@@ -13,7 +13,6 @@ import java.util.ArrayList;
  */
 public class Day19 {
 
-    ArrayList<Integer> elves = new ArrayList();
     
     public int getWinningElf(int elfCount){
         int winningElf = 1;
@@ -100,11 +99,6 @@ public class Day19 {
         // TODO code application logic here
         Day19 d19 = new Day19();
         System.out.println("The winning elf is #" + d19.getWinningElf(3018458));
-        
-        for(int i = 0; i < 3018458; i++){
-            d19.elves.add(i+1);
-        }
-        
         System.out.println("The winning elf for p2 is #" + d19.getWinningElf2(3018458));
     }
     
