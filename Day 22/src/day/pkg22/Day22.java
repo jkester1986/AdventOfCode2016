@@ -114,7 +114,7 @@ public class Day22 {
                 Collection<ArrayList<Node>> nodes = current.get(node);
                 System.out.println("Collection size: " + nodes.size());
                 
-                /* somewhere in here the colections are getting messed up
+                
                 for(ArrayList<Node> entry: nodes){
                     
                     Node a = new Node(node[0]);
@@ -150,14 +150,13 @@ public class Day22 {
                     for(Node[] pair: adjacentPairs){
                         future.put(node, theList);
                     }
-
-                    
                 }
-                current = ArrayListMultimap.create(future);
-                future = ArrayListMultimap.create();
-                */
+                
+                
             }
-            return;
+            current = ArrayListMultimap.create(future);
+            future = ArrayListMultimap.create();
+            //return;
         }
     }
     
@@ -173,6 +172,7 @@ public class Day22 {
         ArrayList<Node[]> adjacentPairs = d22.borderPairs(d22.nodeList);
         for(Node[] node: adjacentPairs){
             System.out.println("Node A: " + node[0] + " Node B: " + node[1]);
+            ArrayList<Node[]> newList = new ArrayList(adjacentPairs);
             d22.current.put(node, d22.nodeList);
         }
         
