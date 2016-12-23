@@ -5,6 +5,8 @@
  */
 package day.pkg22;
 
+import java.util.Objects;
+
 /**
  *
  * @author jkester
@@ -42,10 +44,15 @@ public class Node {
     }
     
     public void print(){
-        System.out.println("size: " + size +
+        System.out.println(x + ", " + y + " size: " + size +
                 ", used: " + used +
                 ", available: " + available +
                 ", percentage: " + percentage);
+    }
+    
+    @Override
+    public int hashCode(){
+        return Objects.hash(x, y, size, used, available, percentage, hasData);
     }
     
     @Override
