@@ -108,11 +108,12 @@ public class Day22 {
         
         while(!current.isEmpty()){
             count ++;
+            System.out.println("The count is: " + count);
             
             for(Node[] node: current.keySet()){
                 
                 Collection<ArrayList<Node>> nodes = current.get(node);
-                System.out.println("Collection size: " + nodes.size());
+                //System.out.println("Collection size: " + nodes.size());
                 
                 
                 for(ArrayList<Node> entry: nodes){
@@ -124,8 +125,8 @@ public class Day22 {
                     
                     int indA = theList.indexOf(a);
                     int indB = theList.indexOf(b);
-                    System.out.println("index A " + indA);
-                    System.out.println("index B " + indB);
+                    //System.out.println("index A " + indA);
+                    //System.out.println("index B " + indB);
 
                     if(a.hasData) System.out.println("A is moving");
 
@@ -148,7 +149,12 @@ public class Day22 {
                     //set up next set
                     ArrayList<Node[]> adjacentPairs = borderPairs(theList);
                     for(Node[] pair: adjacentPairs){
-                        future.put(node, theList);
+                        
+                        if(!all.containsEntry(pair, theList)){
+                            future.put(pair, theList);
+                            all.put(pair, theList);
+                        }
+                        //ToDo: probably need to check for duplicates in full list
                     }
                 }
                 
@@ -174,6 +180,7 @@ public class Day22 {
             System.out.println("Node A: " + node[0] + " Node B: " + node[1]);
             ArrayList<Node[]> newList = new ArrayList(adjacentPairs);
             d22.current.put(node, d22.nodeList);
+            d22.all.put(node,d22.nodeList);
         }
         
         for(Node[] node: d22.current.keySet()){
