@@ -8,10 +8,11 @@ package day.pkg22;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.regex.Pattern;/*
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+*/
 
 /**
  *
@@ -22,12 +23,17 @@ public class Day22 {
     Node[][] compNodes = new Node[34][30];//do I need this????
     ArrayList<Node> nodeList = new ArrayList();
     
+    Node empty;
+    
     int lowest = 0;
     
+    /*
     Multimap<Node[], ArrayList<Node>> all = HashMultimap.create();
     
     Multimap<Node[], ArrayList<Node>> current = HashMultimap.create();
     Multimap<Node[], ArrayList<Node>> future = HashMultimap.create();
+    */
+    
     
     public void fillNodes(Scanner sc){
         Pattern p = Pattern.compile(".*\\s(\\d+)T.*\\s(\\d+)T.*\\s(\\d+)T.*\\s(\\d+)%$");
@@ -46,6 +52,7 @@ public class Day22 {
                         Integer.parseInt(m.group(4)));
                 
                 if(x == 0 && y == 29) n.hasData = true;
+                if(Integer.parseInt(m.group(2)) == 0) empty = n;
                 
                 compNodes[x][y] = n;
                 nodeList.add(n);
@@ -101,6 +108,11 @@ public class Day22 {
         return nodePairs;
     }
     
+    public void countSteps(){
+        
+    }
+    
+    /*
     public void countSteps(){
         int count = 0;
         
@@ -165,7 +177,7 @@ public class Day22 {
             //return;
         }
     }
-    
+    */
     public static void main(String[] args) {
         // TODO code application logic here
         Day22 d22 = new Day22();
@@ -179,29 +191,30 @@ public class Day22 {
         for(Node[] node: adjacentPairs){
             System.out.println("Node A: " + node[0] + " Node B: " + node[1]);
             ArrayList<Node[]> newList = new ArrayList(adjacentPairs);
-            d22.current.put(node, d22.nodeList);
-            d22.all.put(node,d22.nodeList);
+            //d22.current.put(node, d22.nodeList);
+            //d22.all.put(node,d22.nodeList);
         }
-        
+        /*
         for(Node[] node: d22.current.keySet()){
                 
                 Collection<ArrayList<Node>> nodes = d22.current.get(node);
                 System.out.println("Initial collection size: " + nodes.size());
         }
+                */
         
         
-        /*
+        
         for(int y = 0; y < 30; y++){
             for (int x = 0; x < 34; x++){
                 System.out.print(d22.compNodes[x][y].used + "/" + d22.compNodes[x][y].size + "     ");
                 
             }
         }
-*/
+
         //if(d22.compNodes[0][29].hasData) System.out.println("there's a node with data");
         
         
-        d22.countSteps();
+        //d22.countSteps();
 
         
     }
