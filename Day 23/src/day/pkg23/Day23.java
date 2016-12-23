@@ -44,6 +44,8 @@ public class Day23 {
             Matcher m = p.matcher(direction);
             m.find();
             
+            
+            //going to have to check 
             switch(m.group(1)){
                 case "cpy":
                     Matcher cpym = cpy.matcher(direction);
