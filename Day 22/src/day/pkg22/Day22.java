@@ -8,31 +8,18 @@ package day.pkg22;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;/*
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-*/
+import java.util.regex.Pattern;
 
-/**
- *
- * @author jkester
- */
+
 public class Day22 {
 
     Node[][] compNodes = new Node[34][30];//do I need this????
     ArrayList<Node> nodeList = new ArrayList();
     
     Node empty;
+    int wallYIndex;
     
     int lowest = 0;
-    
-    /*
-    Multimap<Node[], ArrayList<Node>> all = HashMultimap.create();
-    
-    Multimap<Node[], ArrayList<Node>> current = HashMultimap.create();
-    Multimap<Node[], ArrayList<Node>> future = HashMultimap.create();
-    */
     
     
     public void fillNodes(Scanner sc){
@@ -53,6 +40,7 @@ public class Day22 {
                 
                 if(x == 0 && y == 29) n.hasData = true;
                 if(Integer.parseInt(m.group(2)) == 0) empty = n;
+                if(n.size >= 500) wallYIndex = y;
                 
                 compNodes[x][y] = n;
                 nodeList.add(n);
@@ -99,7 +87,6 @@ public class Day22 {
                                 Node[] node = {n, c};
                                 nodePairs.add(node);
                         }
-                        
                     }
                 }
             }
@@ -109,75 +96,30 @@ public class Day22 {
     }
     
     public void countSteps(){
+        int count = 0;
+        boolean hitWall = false;
+        boolean passedWall = false;
+        
+        boolean reachedX32 = false;
+        
+        System.out.println("wall is at y=" + wallYIndex);
+        System.out.println("empty is at y = " + empty.y);
+        count = empty.y - (wallYIndex + 1);//steps to get to the wall
+        count +=5;//steps to get around the wall
+        //should be at 1,1 now. need to get to 32
+        count += 32-1;//right above where we should be
+        count ++;//right in front of the data we need to move
+        System.out.println("the count is " + count);
+        
+        count++;
+        for(int i = 32; i > 0; i--){//do all the rotations from here
+            count +=5;
+        }
+        System.out.println("total count: " + count);
         
     }
     
-    /*
-    public void countSteps(){
-        int count = 0;
-        
-        System.out.println("starting with " + current.size() + " sets");
-        
-        while(!current.isEmpty()){
-            count ++;
-            System.out.println("The count is: " + count);
-            
-            for(Node[] node: current.keySet()){
-                
-                Collection<ArrayList<Node>> nodes = current.get(node);
-                //System.out.println("Collection size: " + nodes.size());
-                
-                
-                for(ArrayList<Node> entry: nodes){
-                    
-                    Node a = new Node(node[0]);
-                    Node b = new Node(node[1]);
-                    
-                    ArrayList<Node> theList = new ArrayList(entry);
-                    
-                    int indA = theList.indexOf(a);
-                    int indB = theList.indexOf(b);
-                    //System.out.println("index A " + indA);
-                    //System.out.println("index B " + indB);
-
-                    if(a.hasData) System.out.println("A is moving");
-
-                    b.used += a.used;
-                    b.available -= a.used;
-                    b.hasData = a.hasData;
-
-                    a.available = a.size;
-                    a.used = 0;
-                    a.hasData = false;
-
-                    if(b.x == 33 && b.y == 0 && b.hasData == true){
-                        System.out.println("it took " + count + " steps to move the data to the right spot");
-                        break;
-                    }
-
-                    theList.set(indA, a);
-                    theList.set(indB, b);
-
-                    //set up next set
-                    ArrayList<Node[]> adjacentPairs = borderPairs(theList);
-                    for(Node[] pair: adjacentPairs){
-                        
-                        if(!all.containsEntry(pair, theList)){
-                            future.put(pair, theList);
-                            all.put(pair, theList);
-                        }
-                        //ToDo: probably need to check for duplicates in full list
-                    }
-                }
-                
-                
-            }
-            current = ArrayListMultimap.create(future);
-            future = ArrayListMultimap.create();
-            //return;
-        }
-    }
-    */
+    
     public static void main(String[] args) {
         // TODO code application logic here
         Day22 d22 = new Day22();
@@ -191,30 +133,18 @@ public class Day22 {
         for(Node[] node: adjacentPairs){
             System.out.println("Node A: " + node[0] + " Node B: " + node[1]);
             ArrayList<Node[]> newList = new ArrayList(adjacentPairs);
-            //d22.current.put(node, d22.nodeList);
-            //d22.all.put(node,d22.nodeList);
         }
-        /*
-        for(Node[] node: d22.current.keySet()){
-                
-                Collection<ArrayList<Node>> nodes = d22.current.get(node);
-                System.out.println("Initial collection size: " + nodes.size());
-        }
-                */
-        
-        
         
         for(int y = 0; y < 30; y++){
             for (int x = 0; x < 34; x++){
                 System.out.print(d22.compNodes[x][y].used + "/" + d22.compNodes[x][y].size + "     ");
                 
             }
+            System.out.print("\n");
         }
-
-        //if(d22.compNodes[0][29].hasData) System.out.println("there's a node with data");
         
         
-        //d22.countSteps();
+        d22.countSteps();
 
         
     }
