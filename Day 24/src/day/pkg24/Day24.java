@@ -5,12 +5,13 @@
  */
 package day.pkg24;
 
-import java.util.ArrayList;
+import java.util.SortedSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  *
@@ -22,10 +23,13 @@ public class Day24 {
     int startx;
     int starty;
     
-    
-    Map<Integer[], ArrayList<Integer>> current = new HashMap<Integer[], ArrayList<Integer>>();
-    Map<Integer[], ArrayList<Integer>> future = new HashMap<Integer[], ArrayList<Integer>>();
-    Map<Integer[], ArrayList<Integer>> all = new HashMap<Integer[], ArrayList<Integer>>();
+    /*
+    Map<Integer[], SortedSet<Integer>> current = new HashMap<Integer[], SortedSet<Integer>>();
+    Map<Integer[], SortedSet<Integer>> future = new HashMap<Integer[], SortedSet<Integer>>();
+*/
+    Set<Location> current = new HashSet();
+    Set<Location> future = new HashSet();
+    Set<Location> all = new HashSet();
     
     public void parseInput(Scanner sc){
         for(int y = 0; y < 41; y++){
@@ -44,26 +48,136 @@ public class Day24 {
     public int takeSteps(){
         int steps = 0;
         
+        while(!current.isEmpty()){
+            //move
+            steps++;
+            
+            for(Location location: current){
+                //check to see if new location contains a #, then add it if it is and doesn't already exist in the list
+                if(location.collected.size() == 8){
+                    System.out.println("You found the shortest route!");
+                    return steps;
+                }
+                else{
+                    addLocations(location);
+                }
+            }
+            //move future to current, empty future
+            current = new HashSet(future);
+            future = new HashSet();
+        }
         
         
         return steps;
     }
     
-    public ArrayList<Integer[]> getLocations(Integer[] currentLoc){
-        int x = currentLoc[0];
-        int y = currentLoc[1];
+    public void addLocations(Location location){
+        int x = location.x;
+        int y = location.y;
         
-        ArrayList<Integer[]> locations = new ArrayList();
+        SortedSet<Integer> collectedNums = new TreeSet(location.collected);
         
-        if(y-1 != 0){
-           Integer[] up = {x, y-1};
-           //if not a wall locations.add(up);
+        if(y-1 > 0){
+           if(airDuct[x][y-1] != '#'){
+               Location newLoc;
+               if(Character.toString(airDuct[x][y-1]).matches("\\d")){//if the location contains a number
+                   Integer theNum = Character.getNumericValue(airDuct[x][y-1]);//find out what the number is
+                   if(!collectedNums.contains(theNum)){//if the number is NOT already in the list of collected numbers
+                       SortedSet<Integer> newList = new TreeSet(location.collected);
+                       newList.add(theNum);
+                       newLoc = new Location(x, y-1, newList);
+                   }
+                   else{//number is already in list of collected nums
+                       SortedSet<Integer> newList = new TreeSet(location.collected);
+                       newLoc = new Location(x, y-1, newList);
+                   }
+               }
+               else{//just an open space "."
+                   SortedSet<Integer> newList = new TreeSet(location.collected);
+                   newLoc = new Location(x, y-1, newList);
+               }
+                   if(!all.contains(newLoc)){
+                       all.add(newLoc);
+                       future.add(newLoc);
+                   }
+           }
         }
-        if(y+1 != 0){
-            Integer[] down = {x, y+1};
+        if(y+1 < 40){
+            if(airDuct[x][y+1] != '#'){
+               Location newLoc;
+               if(Character.toString(airDuct[x][y+1]).matches("\\d")){
+                   Integer theNum = Character.getNumericValue(airDuct[x][y+1]);
+                   if(!collectedNums.contains(theNum)){
+                       SortedSet<Integer> newList = new TreeSet(location.collected);
+                       newList.add(theNum);
+                       newLoc = new Location(x, y+1, newList);
+                   }
+                   else{//num not in the arraylist yet
+                       SortedSet<Integer> newList = new TreeSet(location.collected);
+                       newLoc = new Location(x, y+1, newList);
+                   }
+               }
+               else{
+                   SortedSet<Integer> newList = new TreeSet(location.collected);
+                   newLoc = new Location(x, y+1, newList);
+               }
+                   if(!all.contains(newLoc)){
+                       all.add(newLoc);
+                       future.add(newLoc);
+                   }
+           }
+        }
+        if(x+1 < 185){
+            if(airDuct[x+1][y] != '#'){
+               Location newLoc;
+               if(Character.toString(airDuct[x+1][y]).matches("\\d")){
+                   Integer theNum = Character.getNumericValue(airDuct[x+1][y]);
+                   if(!collectedNums.contains(theNum)){
+                       SortedSet<Integer> newList = new TreeSet(location.collected);
+                       newList.add(theNum);
+                       newLoc = new Location(x+1, y, newList);
+                   }
+                   else{//num not in the arraylist yet
+                       SortedSet<Integer> newList = new TreeSet(location.collected);
+                       newLoc = new Location(x+1, y, newList);
+                   }
+               }
+               else{
+                   SortedSet<Integer> newList = new TreeSet(location.collected);
+                   newLoc = new Location(x+1, y, newList);
+               }
+                   if(!all.contains(newLoc)){
+                       all.add(newLoc);
+                       future.add(newLoc);
+                   }
+           }
+        }
+        if(x-1 > 0){
+            if(airDuct[x-1][y] != '#'){
+               Location newLoc;
+               if(Character.toString(airDuct[x-1][y]).matches("\\d")){
+                   Integer theNum = Character.getNumericValue(airDuct[x-1][y]);
+                   if(!collectedNums.contains(theNum)){
+                       SortedSet<Integer> newList = new TreeSet(location.collected);
+                       newList.add(theNum);
+                       newLoc = new Location(x-1, y, newList);
+                   }
+                   else{//num not in the arraylist yet
+                       SortedSet<Integer> newList = new TreeSet(location.collected);
+                       newLoc = new Location(x-1, y, newList);
+                   }
+               }
+               else{
+                   SortedSet<Integer> newList = new TreeSet(location.collected);
+                   newLoc = new Location(x-1, y, newList);
+               }
+                   if(!all.contains(newLoc)){
+                       all.add(newLoc);
+                       future.add(newLoc);
+                   }
+           }
         }
         
-        return locations;
     }
     
     public static void main(String[] args) {
@@ -74,10 +188,15 @@ public class Day24 {
         System.out.println("What's your input?");
         d24.parseInput(sc);
         
-        Integer[] start = {d24.startx, d24.starty};
-        ArrayList<Integer> startNum = new ArrayList<Integer>();
-        d24.current.put(start, startNum);
-        d24.all.put(start, startNum);
+        SortedSet<Integer> startNum = new TreeSet();
+        startNum.add(0);
+        
+        Location start = new Location(d24.startx, d24.starty, startNum);
+        d24.addLocations(start);
+        d24.current = new HashSet(d24.future);
+        d24.future = new HashSet();
+        System.out.println(d24.takeSteps() + " steps");
+        //d24.all.put(start, startNum);
     }
     
 }
