@@ -22,13 +22,12 @@ public class Location {
     
     SortedSet<Integer> collected;
     
-    /*
+    
     public Location(int xLoc, int yLoc){
         x = xLoc;
         y = yLoc;
-        collected = new SortedSet<Integer>();
+        collected = new TreeSet<Integer>();
     }
-*/
     
     public Location(int xLoc, int yLoc, SortedSet<Integer> hasThese){
         x = xLoc;
