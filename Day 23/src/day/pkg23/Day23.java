@@ -17,13 +17,13 @@ import java.util.regex.Pattern;
  */
 public class Day23 {
 
-    int[] register = {7,0,0,0};
+    int[] register = {12,0,0,0};
     
     ArrayList<String> dirs = new ArrayList();
     Pattern p = Pattern.compile("^(\\w+)\\s.*");
     
-    Pattern cpy = Pattern.compile("^.*\\s(\\w|\\d+)\\s(\\w)$");
-    Pattern jnz = Pattern.compile("^.*\\s(\\w|\\d+)\\s(\\-)?(\\d)$");
+    //Pattern cpy = Pattern.compile("^.*\\s(\\w|\\d+)\\s(\\w)$");
+    Pattern jnz = Pattern.compile("^.*\\s(\\-)?(\\w|\\d+)\\s(\\-)?(\\w|\\d)$");
     Pattern incDec = Pattern.compile("(inc||dec||tgl).*(\\w)$");
     
     public void parseInput(Scanner sc){
@@ -37,7 +37,7 @@ public class Day23 {
     public void toggle(int location){
         
         String direction = dirs.get(location);
-        System.out.println("direction toggled from: " + direction);
+        //System.out.println("direction toggled from: " + direction);
         Matcher m = p.matcher(direction);
         m.find();
         
@@ -48,64 +48,41 @@ public class Day23 {
         
         switch(m.group(1)){
             case "tgl":
-                if(twoArgMatch){
-                    direction = direction.replaceAll("tgl", "jnz");
-                }
-                else{
-                    direction = direction.replaceAll("tgl", "inc");
-                }
+                direction = direction.replaceAll("tgl", "inc");
                 dirs.set(location, direction);
                 break;
             case "cpy":
-                if(twoArgMatch){
-                    direction = direction.replaceAll("cpy", "jnz");
-                }
-                else{
-                    direction = direction.replaceAll("cpy", "inc");
-                }
+                direction = direction.replaceAll("cpy", "jnz");
+                
                 dirs.set(location, direction);
                 break;
             case "inc":
-                if(twoArgMatch){
-                    direction = direction.replaceAll("inc", "jnz");
-                }
-                else{
-                    direction = direction.replaceAll("inc", "dec");
-                }
+                direction = direction.replaceAll("inc", "dec");
                 dirs.set(location, direction);
                 break;
             case "dec":
-                if(twoArgMatch){
-                    direction = direction.replaceAll("dec", "jnz");
-                }
-                else{
-                    direction = direction.replaceAll("dec", "inc");
-                }
+                direction = direction.replaceAll("dec", "inc");
                 dirs.set(location, direction);
                 break;
             case "jnz":
-                if(twoArgMatch){
-                    direction = direction.replaceAll("jnz", "cpy");
-                }
-                else{
-                    direction = direction.replaceAll("jnz", "inc");
-                }
+                direction = direction.replaceAll("jnz", "cpy");
+                
                 dirs.set(location, direction);
                 break;
         }
-        System.out.println("direction toggled to: " + direction);
+        //System.out.println("direction toggled to: " + direction);
         
     }
     
     public void followDirs(){
         int size = dirs.size();
-        System.out.println(size + "  is the size");
+        //System.out.println(size + "  is the size");
         
         for(int i = 0; i < size; i++){
             //System.out.println("i: " + i);
             
             String direction = dirs.get(i);
-            System.out.println(direction);
+            //System.out.println(direction);
             Matcher m = p.matcher(direction);
             m.find();
             
@@ -114,27 +91,51 @@ public class Day23 {
             switch(m.group(1)){
                 case "tgl":
                     Matcher tglM = incDec.matcher(direction);
-                    tglM.find();
-                    int tglIndex = register[getIndex(tglM.group(2))] + i;
-                    System.out.println("index to toggle is: " + tglIndex);
-                    if(tglIndex >= 0 && tglIndex < dirs.size())
-                        toggle(tglIndex);
+                    if(tglM.matches()){
+                        int tglIndex = register[getIndex(tglM.group(2))] + i;
+                        //System.out.println("index to toggle is: " + tglIndex);
+                        if(tglIndex >= 0 && tglIndex < dirs.size())
+                            toggle(tglIndex);
+                    }
                     break;
                 case "cpy":
-                    Matcher cpym = cpy.matcher(direction);
+                    Matcher cpym = jnz.matcher(direction);
                     if(cpym.matches()){
                         int copiedVal;
-                        if(cpym.group(1).matches("[abcd]")){
-                            String abcd = cpym.group(1);
-                            copiedVal = register[getIndex(abcd)];
-                            //System.out.println("the value to be copied is: " + copiedVal);
+                        if(cpym.group(1) != null){
+                            copiedVal = Integer.parseInt(cpym.group(2))*(-1);
                         }
                         else{
-                            copiedVal = Integer.parseInt(cpym.group(1));
+                            if(cpym.group(2).matches("[abcd]")){
+                                String abcd = cpym.group(2);
+                                copiedVal = register[getIndex(abcd)];
+                                //System.out.println("the value to be copied is: " + copiedVal);
+                            }
+                            else{
+                                copiedVal = Integer.parseInt(cpym.group(2));
+                            }
                         }
-                        int where = getIndex(cpym.group(2));
+                        
+                        
+                        int where;
+                        //System.out.println("copy group 4 = " + cpym.group(4));
+                        if(cpym.group(3) != null){
+                            where = getIndex(cpym.group(4));
+                        }
+                        else{
+                            if(cpym.group(4).matches("[abcd]")){
+                                String abcd = cpym.group(4);
+                                where = getIndex(abcd);
+                                //System.out.println("the location to be copied to is: " + where);
+                            }
+                            else{
+                                where = Integer.parseInt(cpym.group(4));
+                            }
+                        }
+                        //int where = getIndex(cpym.group(2));
                         //System.out.println("The location to copy to is: " + where);
-                        register[where] = copiedVal;
+                        if(where >= 0 && where < 4) 
+                            register[where] = copiedVal;
                     }
                     break;
                 case "inc":
@@ -156,18 +157,33 @@ public class Day23 {
                     if(jnzm.matches()){
                         int jumpAmt;
 
-                        if(jnzm.group(2) == null ){
-                            jumpAmt = Integer.parseInt(jnzm.group(3)) - 1;
+                        if(jnzm.group(3) != null ){//if negative
+                            jumpAmt = Integer.parseInt(jnzm.group(4))*(-1)-1;
                         }
-                        else jumpAmt = (Integer.parseInt(jnzm.group(3))*(-1))-1;
-                        int baseAmt;
-                        if(jnzm.group(1).matches("[abcd]")){
-                            String abcd = jnzm.group(1);
-                            baseAmt = register[getIndex(abcd)];
+                        //we need to find out if it's a letter or a number
+                        else{
+                            if(jnzm.group(4).matches("[abcd]")){
+                                String abcd = jnzm.group(4);
+                                jumpAmt = register[getIndex(abcd)] -1;
 
+                            }
+                            else{
+                                jumpAmt = Integer.parseInt(jnzm.group(4)) -1;
+                            }
+                        }
+                        int baseAmt;
+                        if(jnzm.group(1) != null ){//if negative
+                            baseAmt = Integer.parseInt(jnzm.group(2))*(-1);
                         }
                         else{
-                            baseAmt = Integer.parseInt(jnzm.group(1));
+                            if(jnzm.group(2).matches("[abcd]")){
+                                String abcd = jnzm.group(2);
+                                baseAmt = register[getIndex(abcd)];
+
+                            }
+                            else{
+                                baseAmt = Integer.parseInt(jnzm.group(2));
+                            }
                         }
                         if(baseAmt != 0){
                             //System.out.println("amount to move: " + jumpAmt);
@@ -177,14 +193,16 @@ public class Day23 {
                         else{
                             //System.out.println("val was 0, do nothing");
                         }
-                    }      
+                    }
                     break;
                 default: break;
             }
+            /*
             for(int j: register){
                 System.out.print(" " + j);
             }
             System.out.println("\n");
+*/
         }
         
     }
